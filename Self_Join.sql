@@ -5,7 +5,7 @@
  -----------------------------------------------------------------------
     컬럼명          데이터타입       NULLABLE    default value     PF/FK
  -----------------------------------------------------------------------
-  RENAIN_YEAR      CHAR(4)        N                             PK
+  REMAIN_YEAR      CHAR(4)        N                             PK
   PROD_ID          VARCHAR2(10)   N                             PK & FK
   REMAIN_J_00      NUMBER(5)      Y             0               
   REMAIN_I         NUMBER(5)      Y             0                  
@@ -30,3 +30,4 @@
          AND B.DEPARTMENT_ID=50)
    WHERE A.EMPLOYEE_ID=121
    ORDER BY 3;
+
