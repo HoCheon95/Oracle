@@ -1,12 +1,47 @@
-Oracle
-|ㅡ Aggregate_Function.sql [집계함수]
-|ㅡ Join.sql [조인]
-|ㅡ Join_Assignment.sql [조인 과제]
-|ㅡ NEW_ID.sql [sql 각종 명령어]
-|ㅡ Null_Function.sql [NULL처리 함수]
-|ㅡ Outer_Join.sql [외부조인]
-|ㅡ Rank_Function.sql [순위함수]
-|ㅡ Rollup_Cube.sql [ROLLUP 과 CUBE]
-|ㅡ Self_Join.sql [셀프조인]
-|ㅡ Set_Operator.sql [집합 연산자]
-|ㅡ Sub_Query.sql [서브쿼리]
+# 📘 Oracle SQL 학습 정리
+
+이 폴더는 Oracle SQL 학습 내용을 주제별로 정리한 실습 파일 모음입니다.  
+각 SQL 파일에는 예제와 함께 학습하면서 정리한 주석이 포함되어 있습니다.
+
+---
+
+## 📂 파일 목록
+
+- **Aggregate_Function.sql**  
+  - 집계 함수 (COUNT, SUM, AVG, MAX, MIN)
+
+- **Join.sql**  
+  - 기본 JOIN 문법 (INNER JOIN)
+
+- **Join_Assignment.sql**  
+  - JOIN 관련 연습 문제
+
+- **NEW_ID.sql**  
+  - SQL 주요 명령어 정리 (SELECT, INSERT, UPDATE, DELETE 등)
+
+- **Null_Function.sql**  
+  - NULL 처리 함수 (NVL, NVL2, COALESCE)
+
+- **Outer_Join.sql**  
+  - 외부 조인 (LEFT / RIGHT / FULL OUTER JOIN)
+
+- **Rank_Function.sql**  
+  - 순위 함수 (RANK, DENSE_RANK, ROW_NUMBER)
+
+- **Rollup_Cube.sql**  
+  - ROLLUP, CUBE를 이용한 집계 확장
+
+- **Self_Join.sql**  
+  - SELF JOIN (같은 테이블 조인)
+
+- **Set_Operator.sql**  
+  - 집합 연산자 (UNION, UNION ALL, INTERSECT, MINUS)
+
+- **Sub_Query.sql**  
+  - 서브쿼리 (단일행 / 다중행 / 상관 서브쿼리)
+
+---
+
+## 📝 참고
+- 각 파일 상단에 **학습 목적 및 주석 설명**이 포함되어 있습니다.
+- 실습 위주의 학습 기록 저장소입니다.
