@@ -31,4 +31,4 @@
   - 집합 연산자 (UNION, UNION ALL, INTERSECT, MINUS)
 
 - **Sub_Query.sql**  
-  - 서브쿼리 (단일행 / 다중행 / 상관 서브쿼리)
+  - 서브쿼리 (스칼라 / 인라인 / 중첩서브쿼리)
