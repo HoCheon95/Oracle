@@ -69,4 +69,83 @@
             FROM SALES)
    GROUP BY PERIOD
    ORDER BY 1;
-  
+
+2. 교집합(INTERSECT)
+ - 각 각의 SELECT 문에서 조회된 값 중 공통되는 부분을 반환함
+ - EXISTS 연산자로 구현가능
+
+사용예) 2020년 6월과 7월에 모두 판매된 상품의 상품코드, 상품명, 판매가를 조회하시오
+(2020년 6월에 판매된 상품의 상품코드, 상품명, 판매가)
+  SELECT DISTINCT A.PROD_ID AS 상품코드, 
+         B.PROD_NAME AS 상품명, 
+         B.PROD_PRICE AS 판매가
+    FROM CART A
+   INNER JOIN PROD B ON(A.PROD_ID=B.PROD_ID)
+   WHERE A.CART_NO LIKE '202006%'
+   
+(2020년 7월에 판매된 상품의 상품코드, 상품명, 판매가)
+
+  SELECT DISTINCT A.PROD_ID, B.PROD_NAME, B.PROD_PRICE
+    FROM CART A
+   INNER JOIN PROD B ON(A.PROD_ID=B.PROD_ID)
+   WHERE A.CART_NO LIKE '202007%'
+
+(INTERSECT)   
+  SELECT DISTINCT A.PROD_ID AS 상품코드, 
+         B.PROD_NAME AS 상품명, 
+         B.PROD_PRICE AS 판매가
+    FROM CART A
+   INNER JOIN PROD B ON(A.PROD_ID=B.PROD_ID)
+   WHERE A.CART_NO LIKE '202006%'
+   INTERSECT
+  SELECT DISTINCT A.PROD_ID, B.PROD_NAME, B.PROD_PRICE
+    FROM CART A
+   INNER JOIN PROD B ON(A.PROD_ID=B.PROD_ID)
+   WHERE A.CART_NO LIKE '202007%'   
+   ORDER BY 1;
+
+(EXISTS 연산자 사용)
+  SELECT DISTINCT A.PROD_ID AS 상품코드, 
+         B.PROD_NAME AS 상품명, 
+         B.PROD_PRICE AS 판매가
+    FROM CART A
+   INNER JOIN PROD B ON(A.PROD_ID=B.PROD_ID)
+   WHERE A.CART_NO LIKE '202006%'
+     AND EXISTS(SELECT 1
+                  FROM CART C
+                 WHERE C.CART_NO LIKE '202007%'
+                   AND C.PROD_ID=A.PROD_ID);
+                   
+3. 차집합(MINUS)
+ - 앞서 기술된 SELECT 문 결과에서 뒤에 기술된 SELECT 문의 결과를 뺀 결과를 반환
+ - MINUS 연산자로 왼쪽, 오른쪽에 기술하는 순서에 따라 결과 값이 달라짐
+ - NOT EXISTS 연산자로 구현가능
+
+
+ 사용예) 2020년 6월과 7월에 판매된 상품 중에 6월에만 판매된 상품의
+       상품코드, 상품명, 판매가를 조회하시오
+(2020년 6월에 판매된 상품의 상품코드, 상품명, 판매가)
+  SELECT DISTINCT A.PROD_ID AS 상품코드, 
+         B.PROD_NAME AS 상품명, 
+         B.PROD_PRICE AS 판매가
+    FROM CART A, PROD B
+   WHERE A.PROD_ID=B.PROD_ID
+     AND SUBSTR(A.CART_NO,1,6) = '202006'
+  MINUS
+--(2020년 7월에 판매된 상품의 상품코드, 상품명, 판매가)
+  SELECT DISTINCT A.PROD_ID, B.PROD_NAME, B.PROD_PRICE
+    FROM CART A, PROD B
+   WHERE A.PROD_ID=B.PROD_ID
+     AND SUBSTR(A.CART_NO,1,6) = '202007';
+
+(EXISTS 연산자)
+  SELECT DISTINCT A.PROD_ID AS 상품코드, 
+         B.PROD_NAME AS 상품명, 
+         B.PROD_PRICE AS 판매가
+    FROM CART A, PROD B
+   WHERE A.PROD_ID=B.PROD_ID
+     AND SUBSTR(A.CART_NO,1,6) = '202006'
+     AND NOT EXISTS(SELECT DISTINCT A.PROD_ID
+                      FROM CART
+                     WHERE A.PROD_ID=PROD_ID
+                       AND SUBSTR(CART_NO,1,6) = '202007')
