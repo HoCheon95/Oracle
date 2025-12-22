@@ -1,0 +1,12 @@
+Oracle
+|ㅡ Aggregate_Function.sql [집계함수]
+|ㅡ Join.sql [조인]
+|ㅡ Join_Assignment.sql [조인 과제]
+|ㅡ NEW_ID.sql [sql 각종 명령어]
+|ㅡ Null_Function.sql [NULL처리 함수]
+|ㅡ Outer_Join.sql [외부조인]
+|ㅡ Rank_Function.sql [순위함수]
+|ㅡ Rollup_Cube.sql [ROLLUP 과 CUBE]
+|ㅡ Self_Join.sql [셀프조인]
+|ㅡ Set_Operator.sql [집합 연산자]
+|ㅡ Sub_Query.sql [서브쿼리]
