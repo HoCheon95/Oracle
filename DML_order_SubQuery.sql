@@ -117,7 +117,7 @@ COMMIT;
 
 메인쿼리 : UPDATE 명령
   UPDATE REMAIN A
-     SET (A.REMAIN_O, A.REMAIN_J_99N A.REMAIN_DATE) = 
+     SET (A.REMAIN_O, A.REMAIN_J_99, A.REMAIN_DATE) = 
          (SELECT A.REMAIN_O+B.SUM, A.REMAIN_J_99-B.BSUM, TO_DATE('20200430')
             FROM (SELECT PROD_ID, SUM(CART_QTY) AS BSUM
                     FROM CART
@@ -127,3 +127,23 @@ COMMIT;
    WHERE A.PROD_ID IN (SELECT DISTINCT PROD_ID
                          FROM CART
                         WHERE SUBSTR(CART_NO,1,6) = '202004');
+
+-- 답안
+(서브쿼리)
+  SELECT SUM(B.CART_QTY)
+    FROM CART B
+   WHERE B.CART_NO LIKE '202004%'
+     AND B.PROD_ID=(재고수불테이블의 상품코드)
+
+(메인쿼리)
+  UPDATE REMAIN A
+     SET (A.REMAIN_O, A.REMAIN_J_99, A.REMAIN_DATE) = 
+         (SELECT A.REMAIN_O + SUM(B.CART_QTY),
+                 A.REMAIN_J_99-SUM(B.CART_QTY),
+                 TO_DATE('20200430')
+            FROM CART B
+           WHERE B.CART_NO LIKE '202004%'
+             AND B.PROD_ID=A.PROD_ID)
+  WHERE A.PROD_ID IN (SELECT DISTINCT PROD_ID
+                        FROM CART
+                       WHERE CART_NO LIKE '202004%')
