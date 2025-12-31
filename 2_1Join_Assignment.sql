@@ -1,0 +1,98 @@
+1) 2020년 거래처별 납품실적을 조회하시오
+      Alias는 거래처코드, 거래처명, 납품액합계
+(ANSI JOIN)
+  SELECT A.BUYER_ID AS 거래처코드, 
+         A.BUYER_NAME AS 거래처명, 
+         SUM(B.PROD_COST * C.BUY_QTY) AS 납품액합계
+    FROM BUYER A
+   INNER JOIN PROD B ON(A.BUYER_ID=B.BUYER_ID)
+   INNER JOIN BUYPROD C ON(C.PROD_ID=B.PROD_ID)
+   WHERE EXTRACT(YEAR FROM C.BUY_DATE)=2020
+   GROUP BY A.BUYER_ID, A.BUYER_NAME
+   ORDER BY 1;
+   
+(일반 조인)
+  SELECT A.BUYER_ID AS 거래처코드, 
+         A.BUYER_NAME AS 거래처명, 
+         SUM(B.PROD_COST * C.BUY_QTY) AS 납품액합계
+    FROM BUYER A, PROD B, BUYPROD C
+   WHERE EXTRACT(YEAR FROM C.BUY_DATE) = 2020
+     AND C.PROD_ID=B.PROD_ID
+     AND A.BUYER_ID=B.BUYER_ID
+   GROUP BY A.BUYER_ID, A.BUYER_NAME
+   ORDER BY 1;
+2) 2020년 회원별 구매금액을 조회하되 1000만원 이상인 회원만 출력하시오
+      Alia는 회원번호,회원명,구매금액합계
+(ANSI JOIN)
+  SELECT A.MEM_ID AS 회원번호,
+         C.MEM_NAME AS 회원명,
+         SUM(A.CART_QTY * B.PROD_PRICE) AS 구매금액합계
+    FROM CART A
+   INNER JOIN PROD B ON(A.PROD_ID=B.PROD_ID AND A.CART_NO LIKE '2020%')
+   INNER JOIN MEMBER C ON(A.MEM_ID=C.MEM_ID)
+   GROUP BY A.MEM_ID,C.MEM_NAME
+  HAVING SUM(A.CART_QTY * B.PROD_PRICE)>=10000000
+   ORDER BY 3;
+   
+(일반 조인)
+  SELECT A.MEM_ID AS 회원번호,
+         C.MEM_NAME AS 회원명,
+         SUM(A.CART_QTY * B.PROD_PRICE) AS 구매금액합계
+    FROM CART A, PROD B, MEMBER C
+   WHERE A.PROD_ID=B.PROD_ID
+     AND A.MEM_ID=C.MEM_ID
+     AND A.CART_NO LIKE '2020%'
+   GROUP BY A.MEM_ID,C.MEM_NAME
+  HAVING SUM(A.CART_QTY * B.PROD_PRICE)>=10000000
+   ORDER BY 3;
+
+3) 2020년 5월과 7월 매출 정보에서 5월에만 발생된 매출만 발생된 상품을 조회하시오
+      Alias는 상품코드,상품명,매출금액합계
+(ANSI JOIN)
+  SELECT A.PROD_ID AS 상품코드, 
+         B.PROD_NAME AS 상품명, 
+         SUM(A.CART_QTY * B.PROD_PRICE) AS 매출금액합계
+    FROM CART A
+   INNER JOIN PROD B ON(A.PROD_ID=B.PROD_ID AND A.CART_NO LIKE '202005%')
+   WHERE A.PROD_ID NOT IN (SELECT DISTINCT PROD_ID
+                             FROM CART
+                            WHERE CART_NO LIKE '202007%')--2020년 7월에 판매된 상품의 상품코드)
+   GROUP BY A.PROD_ID, B.PROD_NAME
+   ORDER BY 1;
+
+(EXISTS 연산자 사용)
+  SELECT A.PROD_ID AS 상품코드, 
+         B.PROD_NAME AS 상품명, 
+         SUM(A.CART_QTY * B.PROD_PRICE) AS 매출금액합계
+    FROM CART A
+   INNER JOIN PROD B ON(A.PROD_ID=B.PROD_ID AND A.CART_NO LIKE '202005%')
+   WHERE NOT EXISTS(SELECT 1
+                      FROM CART B
+                     WHERE B.CART_NO LIKE '202007%'
+                       AND B.PROD_ID=A.PROD_ID)--2020년 7월에 판매된 상품의 상품코드)
+   GROUP BY A.PROD_ID, B.PROD_NAME
+   ORDER BY 1;
+   
+(집합연산자(MINUS) 사용)
+  SELECT DISTINCT A.PROD_ID AS 상품코드, 
+         B.PROD_NAME AS 상품명
+    FROM CART A
+   INNER JOIN PROD B ON(A.PROD_ID=B.PROD_ID AND A.CART_NO LIKE '202005%')
+  MINUS
+  SELECT DISTINCT A.PROD_ID, B.PROD_NAME
+    FROM CART A
+   INNER JOIN PROD B ON(A.PROD_ID=B.PROD_ID AND A.CART_NO LIKE '202007%')
+   ORDER BY 1;
+
+5) HR 계정의 테이블들을 이용하여 미국 이외에 국가에서 근무하는 사원들을 출력하시오
+   Alias는 사원번호,사원명,부서번호,부서명,국가명
+  SELECT A.EMPLOYEE_ID AS 사원번호,
+         A.EMP_NAME AS 사원명,
+         A.DEPARTMENT_ID AS 부서번호,
+         B.DEPARTMENT_NAME AS 부서명,
+         D.COUNTRY_NAME AS 국가명
+    FROM HR.EMPLOYEES A
+   INNER JOIN HR.DEPARTMENTS B ON(A.DEPARTMENT_ID=B.DEPARTMENT_ID)
+   INNER JOIN HR.LOCATIONS C ON(C.LOCATION_ID=B.LOCATION_ID)
+   INNER JOIN HR.COUNTRIES D ON(C.COUNTRY_ID=D.COUNTRY_ID AND D.COUNTRY_ID !='US')
+   ORDER BY 3;
